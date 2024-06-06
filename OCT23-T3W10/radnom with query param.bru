@@ -1,0 +1,18 @@
+meta {
+  name: radnom with query param
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:3000/pokemon/getbyid/25
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "favouritePokemon":"squirtle",
+    "favouriteFood": "mango"
+  }
+}

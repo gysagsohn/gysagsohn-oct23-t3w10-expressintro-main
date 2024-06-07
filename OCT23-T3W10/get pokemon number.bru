@@ -4,10 +4,14 @@ meta {
   seq: 5
 }
 
-post {
-  url: http://localhost:3000/pokemon/
+get {
+  url: http://localhost:3000/pokemon/getbyid/25
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: adfasgr
 }
 
 body:json {

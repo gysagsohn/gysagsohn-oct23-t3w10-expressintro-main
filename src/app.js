@@ -2,36 +2,58 @@
 
 const express = require("express");
 const serverInstance = express();
-const PokemonRouter = require("./routers/pokemonRoutes.js");
-
+const {body, validationResult} = require("express-validator");
 
 // Raw JSON in body allowed
 serverInstance.use(express.json());
 // Form data in body allowed
 serverInstance.use(express.urlencoded({extended: true}));
 
+
+
+
 // Every route that begins with /pokemon gets passed to PokemonRouter
+const PokemonRouter = require("./routers/pokemonRoutes.js");
 serverInstance.use("/pokemon", PokemonRouter);
+serverInstance.use("/digimon", PokemonRouter);
+serverInstance.use("/food", PokemonRouter);
+serverInstance.use("/countries", PokemonRouter);
+
+
+
+
+
 
 
 serverInstance.get("/", (request, response) => {
-    console.log("Someone visited the homapage of the server");
+	console.log("Someone visited the homepage of the server");
 
-
-    response.json({
-        message: "Hello world! Gy was here"
-    })
+	response.json({
+		message:"Hello world! Alex was here!"
+	});
 });
 
-serverInstance.post("/", (request, response) => {
+serverInstance.post(
+	"/",  //path
+	body("username").notEmpty().isLength({min: 4, max: 10}),  // middleware in route chain 
+	(request, response) => {  // final stop in route chain 
 
-    console.log(request.body);
+		const errors = validationResult(request);
+		if (errors){
+			response.status(400).json({
+				message:"Bad username!",
+				errors: errors.array()
+			});
+		}
 
-    response.json({
-        message:"Received data;",
-        requestData: request.body
-    })
-})
+
+		console.log(request.body);
+
+		response.json({
+			message:"Received data:",
+			requestData: request.body
+		})
+});
 
 serverInstance.put("/", (request, response) => {
 	response.json({message:"Put request received"})
@@ -45,5 +67,7 @@ serverInstance.delete("/", (request, response) => {
 	response.json({message:"Delete request received"})
 });
 
-// Make the instance available for other file to use
+
+
+// Make the instance available for other files to use
 module.exports = serverInstance;
